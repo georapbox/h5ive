@@ -1,0 +1,36 @@
+{
+  "name": "h5ive",
+  "version": "1.0.0",
+  "description": "A collection of thin facade APIs wrapped around HTML5 JavaScript features.",
+  "main": "h5ive.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build:dev": "gulp build:dev",
+    "build:live": "gulp build:live",
+    "build:all": "gulp build:all",
+    "watch": "gulp watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/georapbox/h5ive.git"
+  },
+  "keywords": [],
+  "author": "Kyle Simpson <getify@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/georapbox/h5ive/issues"
+  },
+  "homepage": "https://github.com/georapbox/h5ive#readme",
+  "devDependencies": {
+    "browserify": "^12.0.1",
+    "gulp": "^3.9.0",
+    "gulp-header": "^1.7.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.7",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
