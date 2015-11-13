@@ -2,37 +2,44 @@
 module.exports = (function () {
     'use strict';
 
+    // Require dependancies
+    var u = require('utils/index'),
+        is = u.is;
+
     return function storage(opts) {
         var store,
             publicAPI,
             expires;
 
         opts = opts || {};
-        if ('expires' in opts && typeof opts.expires === 'number' && opts.expires > 0) {
+
+        if ('expires' in opts && is.number(opts.expires) && opts.expires > 0) {
             expires = opts.expires + (new Date()).getTime();
         }
 
-        if (opts.expires === 'session') {
-            store = sessionStorage;
-        } else {
-            store = localStorage;
-        }
+        // Determine whether save to sessionStorage or localStorage
+        store = opts.expires === 'session' ? sessionStorage : localStorage;
 
         function save(data) {
             var key,
-            val;
+                val;
+
+            // Do nothing if data is not object
+            if (is.not.plainObject(data)) {
+                return publicAPI;
+            }
 
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
-                    val = {
-                        'h5ive:data': data[key]
-                    };
+                    val = {'h5ive:data': data[key]};
 
                     if (expires) {
                         val['h5ive:expires'] = expires;
                     }
 
-                    store.setItem(key,JSON.stringify(val));
+                    try {
+                        store.setItem(key, JSON.stringify(val));
+                    } catch (err) {}
                 }
             }
 
@@ -40,7 +47,7 @@ module.exports = (function () {
         }
 
         function discard(keys) {
-            if (Object.prototype.toString.call(keys) !== '[object Array]') {
+            if (is.not.array(keys)) {
                 keys = [keys];
             }
 
@@ -52,14 +59,18 @@ module.exports = (function () {
         }
 
         function get(keys) {
-            var i, val, ret = {}, now = (new Date()).getTime();
+            var i,
+                val,
+                ret = {},
+                now = (new Date()).getTime();
 
-            if (Object.prototype.toString.call(keys) !== '[object Array]') {
+            if (is.not.array(keys)) {
                 keys = [keys];
             }
 
             for (i = 0; i < keys.length; i++) {
                 val = ret[keys[i]] = store.getItem(keys[i]);
+
                 try {
                     val = JSON.parse(val);
                     if ('h5ive:data' in val) {
@@ -70,7 +81,7 @@ module.exports = (function () {
                         }
                         ret[keys[i]] = val['h5ive:data'];
                     }
-                } catch (err) { }
+                } catch (err) {}
             }
 
             if (keys.length < 2) {
